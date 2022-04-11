@@ -14,6 +14,7 @@ const server = http.createServer( // create variable server
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.write('That is our about page.');
                 res.end();
+                break;
             default: // if anything else than / or /about is typed then display error page
                 res.writeHead(504, {'Content-Type': 'text/plain'});
                 res.end('404: Page not found.');
