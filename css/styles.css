@@ -1,0 +1,17 @@
+html {
+    width: 100%;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body {
+    width: 90%;
+    margin: 0 auto;
+    background-color: darkcyan;
+}
+
+p {
+    font-size: 20px;
+    font-style: bold;
+    margin-left: 30px;
+    color: blanchedalmond;
+}
