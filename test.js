@@ -1,20 +1,6 @@
 import * as data from './data.js';
 import books from './data.js';
 
-/*console.log(books);
-
-console.log(data.getItem("The Hobbit"));*/
-
-
-/*app.getAll('/' (req, res) => {
-    res.json(books);
-});*/
-
-/*app.getItem('/:title', (req, res) => {
-    const booksTitle = Text(request.params.title);
-    const getItem = books.find((book) => book.title == bookTitle);
-}*/
-
 
 import { parse } from "querystring";
 

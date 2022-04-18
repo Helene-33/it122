@@ -15,14 +15,13 @@ let books  = [
     { title : "Fahrenheit 451", author : "Ray Bradbury", year : 1953, genres : ["Novel", "Science fiction", "Dystopian fiction", "Political fiction"] },
 ]
 
-export default books;
-
-export const getItem = (value) => {
-    return books.find((item) => {
-        return item["title"] == value;
-    })
+export const getAll = () => {
+    const string = (JSON.stringify(books, null, 5));
+    return string;
 }
 
-
-
-//res.send(JSON.stringify(books))
+export const getItem = (value) => {
+    return JSON.stringify(books.filter((item) => { // . filter pulls all the ones matching the year / .find only takes the first one out
+        return item["year"] == value;
+    }))
+}
