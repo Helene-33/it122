@@ -8,14 +8,16 @@
         <h1>Information page.</h1>
         <hr>
             <% if (result) { %>
-                <li>Title: <%= book.title %>
-                <li>Author: <%= book.author %>
-                <li>Year published: <%= book.year %>
-                <li>Genres: <%= book.genres %>   
+                <li>Title: <%= result.title %>
+                <li>Author: <%= result.author %>
+                <li>Year published: <%= result.year %>
+                <li>Genres: <%= result.genres %>   
             <% } else { %>
                 Sorry we did not find any information about this book.
             <% } %>      
-        
+            <br>
+            <br>
+            <br>
         <a href="javascript:history.back()">Go back to the list of books.</a>
 
     </body>

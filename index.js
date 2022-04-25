@@ -12,33 +12,17 @@ app.use(express.json()); // parse JSON bodies
 app.set('view engine', 'ejs');
 
 // each app.get blocks are handlers, like switch in previous index.js versions
+
 // send static file as response
 app.get('/', (req,res) => {
-    res.render('home', {getAll});
+    res.render('home', {books: getAll()});
         });
-
-
-/*app.get('/', (req,res) => { 
-    res.render('home', { 
-       books: [ {title : "Harry Potter and the Sorcerer's Stone", author : "J.K. Rowling"},
-            {title : "1984", author : "George Orwell"},
-            {title : "The Hobbit", author : "J.R.R Tolkien"},
-            {title : "Little Women", author : "Louisa May Alcott"},
-            {title : "Fahrenheit 451", author : "Ray Bradbury"}
-        ]});
-    });*/
 
 app.get('/detail', (req,res) => {
     let result = getItem(req.query.title);
     res.render('detail', {title: req.query.title, result: result});
     console.log(req.query);
     });
-
-/*app.get('/detail', (req,res) => {
-    console.log(req.query);
-    res.render('detail');
-    res.end("Detail for " + req.query.title)
-    });*/
 
 // send plain text response
 app.get('/about', (req,res) => {
