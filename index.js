@@ -1,9 +1,7 @@
 import http from 'http';
 import {getAll, getItem} from './data.js';
-import { parse } from "querystring";
+import {parse} from "querystring";
 import express from 'express';
-//import routes from './routes.js';
-//const app_routes = routes(app); // passes ‘app’ instance to the routes module
 
 const app = express();
 
@@ -13,8 +11,14 @@ app.use(express.urlencoded()); // Parse URL-encoded bodies
 app.use(express.json()); // parse JSON bodies
 app.set('view engine', 'ejs');
 
+// each app.get blocks are handlers, like switch in previous index.js versions
 // send static file as response
-app.get('/', (req,res) => { // each app.get blocks are handlers, like switch in previous index.js versions
+app.get('/', (req,res) => {
+    res.render('home', {getAll});
+        });
+
+
+/*app.get('/', (req,res) => { 
     res.render('home', { 
        books: [ {title : "Harry Potter and the Sorcerer's Stone", author : "J.K. Rowling"},
             {title : "1984", author : "George Orwell"},
@@ -22,7 +26,7 @@ app.get('/', (req,res) => { // each app.get blocks are handlers, like switch in 
             {title : "Little Women", author : "Louisa May Alcott"},
             {title : "Fahrenheit 451", author : "Ray Bradbury"}
         ]});
-    });
+    });*/
 
 app.get('/detail', (req,res) => {
     let result = getItem(req.query.title);
