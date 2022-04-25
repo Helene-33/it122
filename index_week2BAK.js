@@ -30,7 +30,7 @@ const server = http.createServer( // create variable server
             case '/detail':
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 //res.write(getItem('1937'));
-                res.end('Detail for ' + query["title"]);
+                res.end('Detail for: ' + query["title"] + getItem(query.title));
                 break;
             default: // if anything else than / or /about is typed then display error page
                 res.writeHead(504, {'Content-Type': 'text/plain'});
