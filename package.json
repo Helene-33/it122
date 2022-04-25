@@ -1,15 +1,22 @@
 {
-  "name": "1_intro_to_node",
+  "name": "it122",
   "version": "1.0.0",
-  "description": "(first work for the IT122 class)",
+  "description": "JavaScript 2 class application - Node js, Express, React",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "ejs": "^3.1.7",
+    "express": "^4.17.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Helene Liobard",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.3"
-  }
+  "license": "ISC"
 }

@@ -22,6 +22,6 @@ export const getAll = () => {
 
 export const getItem = (value) => {
     return JSON.stringify(books.filter((item) => { // . filter pulls all the ones matching the year / .find only takes the first one out
-        return item["year"] == value;
+        return item["title"] == value;
     }))
 }

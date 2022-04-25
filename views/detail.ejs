@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <title>JavaScript2</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <h1>Information page.</h1>
+        <hr>
+        <% books.forEach(function(book) { %>
+            <% if (result) { %>
+                <li>Title: <%= book.title %>
+                <li>Author: <%= book.author %>
+                <li>Year published: <%= book.year %>
+                <li>Genres: <%= book.genres %>   
+            <% } else { %>
+                Sorry we did not find any information about this book.
+            <% } %>
+        <% }); %>      
+        
+        <a href="javascript:history.back()">Go back to the list of books.</a>
+
+    </body>
+</html>
