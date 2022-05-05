@@ -1,9 +1,7 @@
 import http from 'http';
 import {getAll, getItem, addItem, deleteItem} from './data.js';
-import { Book } from './models/Books.js';
 import {parse} from "querystring";
 import express from 'express';
-import req from 'express/lib/request.js';
 
 const app = express();
 
@@ -15,31 +13,15 @@ app.set('view engine', 'ejs');
 
 // each app.get blocks are handlers, like switch in previous index.js versions
 
-// return all the books
+// send static file as response
 app.get('/', (req,res) => {
-    Book.find({}).lean()
-        .then((books) => {
-            res.render('home.ejs', {books});
-        })
-        .catch(err => next(err));
-    });
+    res.render('home', {books: getAll()});
+        });
 
 app.get('/detail', (req,res) => {
-    Book.findOne({title: req.query.title}).lean()
-        .then((book) => {
-            res.render('detail', {result: book});
-        })
-        .catch(err => next(err));
-    });
-
-app.get('/delete', (req,res) => {
-    Book.remove({title:req.query.title}, (err, result) => {
-        if (err) return next(err);
-        let deleteItem = result.result.n !== 0; // n will be 0 if no books are deleted
-        Book.count((err, total) => {
-            res.render('delete', {title: req.query.title, deleted: result.result.n !== 0, total: total } );    
-            });
-        });
+    let result = getItem(req.query.title);
+    res.render('detail', {title: req.query.title, result: result});
+    console.log(req.query);
     });
 
 // send plain text response
