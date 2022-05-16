@@ -13,6 +13,9 @@ app.use(express.urlencoded()); // Parse URL-encoded bodies
 app.use(express.json()); // parse JSON bodies
 app.set('view engine', 'ejs');
 
+import cors from 'cors';
+app.use ('/api', cors());
+
 // each app.get blocks are handlers, like switch in previous index.js versions
 
 // return all the books
@@ -24,6 +27,16 @@ app.get('/', (req,res) => {
         .catch(err => next(err));
     });
 
+app.get('/api/books', (req,res) => { //get All using api
+    try {
+        let books = book.getAll();
+        res.json(book.getAll());
+    } catch {
+        return res.status(500).send('Database Error occured');
+    }
+});
+
+
 app.get('/detail', (req,res) => {
     Book.findOne({title: req.query.title}).lean()
         .then((book) => {
@@ -31,6 +44,15 @@ app.get('/detail', (req,res) => {
         })
         .catch(err => next(err));
     });
+
+app.get('/api/books/detail/:title', (req,res,next) => { //get one book using api
+    Book.findOne({title: req.params.title}).lean()
+        .then((book) => {
+            res.json(book)
+        })
+        .catch(err => next(err));
+    });
+
 
 app.get('/delete', (req,res) => {
     Book.remove({title:req.query.title}, (err, result) => {
@@ -41,6 +63,25 @@ app.get('/delete', (req,res) => {
             });
         });
     });
+
+app.get('/api/books/delete/:title', (req,res) => { //delete one item using api
+    Book.remove({title:req.params.title}, (err, result) => {
+        if (err) return next(err);
+            console.log(result)
+            res.json({"message": "Book Deleted Successfully!"})    
+        });
+    });
+
+
+
+app.post('/api/books/add', (req,res,next) => { //creating one item using api - uses POST instead of GET request
+    Book.insertOne({'name':req.body.title}, req.body, {upsert:true}, (err, result) => {
+        if (err) return next(err);
+            console.log(result);
+        // .catch(err => next(err));
+            res.json({"message": "New Book Added."})    
+        });
+    }); 
 
 // send plain text response
 app.get('/about', (req,res) => {
