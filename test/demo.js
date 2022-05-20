@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import * as book from "../data.js";
 
 //let result = {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"]}
 

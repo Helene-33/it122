@@ -1,4 +1,4 @@
-import { Book } from "../Books.js";
+import { Book } from "../data.js";
 
 // return all records
 Book.find({}).lean()

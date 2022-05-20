@@ -17,8 +17,9 @@
     "mongoose": "^6.3.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test1": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint **/*.js",
+    "test": "mocha test/**",
     "start": "nodemon --experimental-modules --es-module-specifier-resolution=node"
   },
   "author": "Helene Liobard",
