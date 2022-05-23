@@ -27,13 +27,11 @@ app.get('/', (req,res) => {
         .catch(err => next(err));
     });
 
-app.get('/api/books', (req,res) => { //get All using api
-    try {
-        let books = book.getAll();
-        res.json(book.getAll());
-    } catch {
-        return res.status(500).send('Database Error occured');
-    }
+app.get('/api/books', (req,res,next) => { //get All using api
+    Book.find((err,results) => {
+        if (err || !results) return next(err);
+        res.json(results);
+    });
 });
 
 
@@ -68,20 +66,30 @@ app.get('/api/books/delete/:title', (req,res) => { //delete one item using api
     Book.remove({title:req.params.title}, (err, result) => {
         if (err) return next(err);
             console.log(result)
-            res.json({"message": "Book Deleted Successfully!"})    
+            res.json({"message": "Book Deleted Successfully!", result})    
         });
     });
 
 
 
 app.post('/api/books/add', (req,res,next) => { //creating one item using api - uses POST instead of GET request
-    Book.insertOne({'name':req.body.title}, req.body, {upsert:true}, (err, result) => {
-        if (err) return next(err);
-            console.log(result);
-        // .catch(err => next(err));
-            res.json({"message": "New Book Added."})    
+    if (!req.body.title) {
+        let book = new Book ({title:req.body.title, author:req.body.author});
+            book.add((err, addBook) => {
+                if (err) return next(err);
+                console.log(addBook)
+                res.json({updated:0, addBook});
         });
+    } else {
+        Book.updateOne({title:req.body.title, author:req.body.author}, req.body, {upsert:true}, (err, addBook) => {
+            if (err) return next(err);
+                console.log(addBook);
+                res.json({"message": "New Book Added.", addBook})    
+        });
+    }
     }); 
+
+
 
 // send plain text response
 app.get('/about', (req,res) => {
