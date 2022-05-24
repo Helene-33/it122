@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript2 - React Version</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <link rel="stylesheet" href="public/css/styles.css">
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+  const books = [
+      { title : "Harry Potter and the Sorcerer's Stone", author : "J.K. Rowling", year : 1997, genres : ["Novel", "Children's literature", "Fantasy"] },
+      { title : "1984", author : "George Orwell", year : 1949, genres : ["Science fiction", "Political fiction", "Social science fiction", "Dystopian fiction"] },
+      { title : "The Hobbit", author : "J.R.R Tolkien", year : 1937, genres : ["Novel", "Children's literature", "Fantasy"] },
+      { title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"] },
+      { title : "Fahrenheit 451", author : "Ray Bradbury", year : 1953, genres : ["Novel", "Science fiction", "Dystopian fiction", "Political fiction"] },
+  ];
+ 
+/*const books = <%- items %>;  DOES NO
+    console.log(books)*/
+
+  const List = (props) => {
+    const booksList = props.books.map((book) => 
+      <li key={book.title} onClick={props.clickHandler}>{book.title} by {book.author},</li>);
+        return <ul>{booksList}</ul>
+  }
+
+  const bookDetail = (props) => {
+    let {title, author, year, genres} = this.props.book;
+      let url = '/detail/?title';
+        return (
+            <div>
+                <ul>
+                    <li>"Title:" {title}</li>
+                    <li>"Author:" {author}</li>
+                    <li>"Year published:" {year}</li>
+                    <li>"Genres:" {genres}</li>
+                </ul>
+                <a href={url}>{title}</a>
+            </div>
+        )
+    }
+   
+ 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {current_book: {}};
+  }
+  render() {
+    return ( 
+      <div> 
+        <h1>Hello there!</h1>
+        <h2>Welcome to the home page.</h2>
+        <hr></hr>
+        <List books={books} clickHandler={this.getbookDetails} />
+      </div> );
+  }
+}
+
+ReactDOM.render(<App />,  document.getElementById('root') );
+
+    </script>
+  </body>
+</html>
