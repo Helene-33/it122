@@ -1,62 +1,44 @@
 import { expect } from "chai";
+import req from "express/lib/request.js";
 import * as book from "../data.js";
-import {getAll, getItem} from './data.js';
+import {getItem, addItem, deleteItem} from '../data.js';
 
-//let result = {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"]}
+describe("Book", () => {
 
+    it('returns the correct book', () => { //test getting an item succeded
+        let result = getItem('Little Women');
+        expect(result).to.deep.equal(
+            {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres: ["Novel", "Fiction", "Children's literature"]});
+    })
 
-/*const getItem = (item) => {
-    return {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"]}
-}*/
+    it('this book is not in our database', () => { //test getting an item failed
+        let result = getItem('Pride and Prejudice');
+        expect(result).to.be.undefined;
+    })
 
-//test all book
-describe("test books data", () => {
-    it('test all the data', () => {
-        let result = getAll ();
-        expect(result).to.deep.include({books})
-    });
+    it('a new book was succesfully added!', () => { //test adding an item succeded
+        let result = addItem(
+            {title: 'And Then There Were None', author: 'Agatha Christie', year: 1939, genres: ["Novel", "Mystery"]});
+        expect(result.addItem).to.be.true;
+    })
+
+    it('we already have this book', () => { //test adding an item failed
+        let result = addItem(
+            {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres: ["Novel", "Fiction", "Children's literature"]});
+        expect(result.addItem).to.be.false;
+    })
+
+    it('this book was succesfully deleted', () => { //test deleting an item succeded
+        let result = deleteItem("Little Women");
+        expect(result.deleteItem).to.be.true;
+    })
+
+    it('we could not delete this book', () => { //test deleting an item succeded
+        let result = deleteItem("To Kill a Mockingbird");
+        expect(result.deleteItem).to.be.false;
+    })
+
 })
 
-describe('test deep equality', () => {
-    //get a book
-    it('getItem returns correct the correct book', () => {
-        let result = getItem(req.query.title);
-        expect(result).to.deep.equal(
-            {title : req.query.title, author : req.query.author, year : req.query.year, genres : req.query.genres}
-        )   
-    });
-   
-    it('error - the book was not found', () => {
-        let result = book.getItem("failed");
-        expect(result).to.be.undefined;
-      });
 
-      //add a book
-      it('addItem creates succesfully a book', () => {
-        let result = getItem(req.query.title);
-        expect(result).to.deep.equal(
-            {title: req.query.title, author : req.query.author, year : req.query.year, genres : req.query.genres}
-        )   
-    });
-   
-    it('error - we could not create this item', () => {
-        let result = book.addItem("failed");
-        expect(result).to.be.undefined;
-      });
-
-
-      //delete a book
-    it('deleteItem removed the book', () => {
-        let result = deleteItem(req.query.title);
-        expect(result).to.deep.equal(
-            {title : req.query.title, author : req.query.author, year : req.query.year, genres : req.query.genres}
-        )   
-    });
-   
-    it('error - the book was not deleted', () => {
-        let result = book.deleteItem("failed");
-        expect(result).to.be.undefined;
-      });
-
-});
 
