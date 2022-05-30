@@ -22,13 +22,13 @@ const getItem = (title) => {
 
 const addItem = (addBook) => {
     books.push(addBook);
-    return books.get((title) => {
+    return books.push((title) => {
         return addBook.title === title;
     });    
 }
 
 const deleteItem = (title) => {
-    books.remove((item) => {
+    books.delete((item) => {
         return item.title !== title;
     });
 };    
