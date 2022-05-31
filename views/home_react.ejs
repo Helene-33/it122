@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript2 - React Version</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <link rel="stylesheet" href="public/css/styles.css">
+    
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+  const books = [
+      { title : "Harry Potter and the Sorcerer's Stone", author : "J.K. Rowling", year : 1997, genres : ["Novel", "Children's literature", "Fantasy"] },
+      { title : "1984", author : "George Orwell", year : 1949, genres : ["Science fiction", "Political fiction", "Social science fiction", "Dystopian fiction"] },
+      { title : "The Hobbit", author : "J.R.R Tolkien", year : 1937, genres : ["Novel", "Children's literature", "Fantasy"] },
+      { title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"] },
+      { title : "Fahrenheit 451", author : "Ray Bradbury", year : 1953, genres : ["Novel", "Science fiction", "Dystopian fiction", "Political fiction"] },
+  ];
+ 
+/*const books = <%- items %>;  DOES NOT WORK?
+    console.log(books)*/
+
+  const List = (props) => {
+    const booksList = props.books.map((book) => 
+      <li key={book.title} onClick={props.clickHandler}>{book.title} by {book.author},</li>);
+        return <ul>{booksList}</ul>
+  }
+
+  /*const bookDetail = (props) => {
+    let {title, author, year, genres} = this.props.book;
+      let url = '/detail/?title';
+        return (
+            <div>
+                <ul>
+                    <li>"Title:" {title}</li>
+                    <li>"Author:" {author}</li>
+                    <li>"Year published:" {year}</li>
+                    <li>"Genres:" {genres}</li>
+                </ul>
+                <a href={url}>{title}</a>
+            </div>
+        )
+    }*/
+
+  const BookDetail = (props) => {
+    return <div>
+      <hr></hr>
+      <h4>Books Details:</h4>
+      <form>
+        Title: <input type= "text" name="title" onChange={props.onChange} value={props.book.title || ""} /><br />
+        Author: <input type= "text" name="author" onChange={props.onChange} value={props.book.author || ""} /><br />
+        Year published: <input type= "number" name="year" onChange={props.onChange} value={props.book.year || ""} /><br />
+        Genres: <input type= "array" name="genres" onChange={props.onChange} value={props.book.genres || ""} />
+      </form>
+      <button onClick={props.onSave}>Save</button> | <button onClick={props.onClear}>Clear</button>
+      </div>
+}
+   
+ 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {current_book: {}};
+  }
+
+
+  showDetail = (e) => {
+    console.log(e.target.innerText);
+    const book = books.find((book) => book.title == e.target.innerText)
+    console.log(book)
+    this.setState({"current_book": book})
+  }
+
+  onChange = (e) => {
+    console.log(e.target)
+    const new_book = this.state.current_book;
+    new_book[e.target.name] = e.target.value;
+    console.log(new_book)
+    this.setState({"current_book": new_book})
+  }
+  
+  onClear = () => {
+    this.setState({"current_book": {}})
+  }
+  
+  onSave = () => {
+    let rnr = this.state.current_book;
+    fetch("/api/books/add/", {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rnr)
+})
+    .then(res => res.json())
+    .then((json) => { console.log(json) });
+  }
+
+
+  render() {
+    return ( 
+      <div> 
+        <h1>Hello there!</h1>
+        <h2>Welcome to the home page.</h2>
+        <hr></hr>
+        <List books={books} clickHandler={this.getbookDetails} />
+        <BookDetail book={this.state.current_book} onSave={this.onSave} onChange={this.onChange} onClear={this.onClear}/>
+      </div> );
+  }
+}
+
+ReactDOM.render(<App />,  document.getElementById('root') );
+
+    </script>
+  </body>
+</html>
