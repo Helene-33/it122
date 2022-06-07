@@ -5,7 +5,7 @@
     <title>JavaScript2 - React Version</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
     
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -23,42 +23,30 @@
       { title : "Fahrenheit 451", author : "Ray Bradbury", year : 1953, genres : ["Novel", "Science fiction", "Dystopian fiction", "Political fiction"] },
   ];
  
-/*const books = <%- items %>;  DOES NOT WORK?
+/*const books = <%- books %>; 
     console.log(books)*/
 
   const List = (props) => {
-    const booksList = props.books.map((book) => 
-      <li key={book.title} onClick={props.clickHandler}>{book.title} by {book.author},</li>);
+    const booksList = props.books.map((book) => {
+      return <li onClick={props.handleClick} key={book.title}>{book.title} by {book.author},</li>
+    });
         return <ul>{booksList}</ul>
   }
 
-  /*const bookDetail = (props) => {
-    let {title, author, year, genres} = this.props.book;
-      let url = '/detail/?title';
-        return (
-            <div>
-                <ul>
-                    <li>"Title:" {title}</li>
-                    <li>"Author:" {author}</li>
-                    <li>"Year published:" {year}</li>
-                    <li>"Genres:" {genres}</li>
-                </ul>
-                <a href={url}>{title}</a>
-            </div>
-        )
-    }*/
 
   const BookDetail = (props) => {
     return <div>
       <hr></hr>
       <h4>Books Details:</h4>
       <form>
-        Title: <input type= "text" name="title" onChange={props.onChange} value={props.book.title || ""} /><br />
-        Author: <input type= "text" name="author" onChange={props.onChange} value={props.book.author || ""} /><br />
-        Year published: <input type= "number" name="year" onChange={props.onChange} value={props.book.year || ""} /><br />
-        Genres: <input type= "array" name="genres" onChange={props.onChange} value={props.book.genres || ""} />
+        Title: <input type= "text" name="title" onChange={props.handleChange} value={props.book.title || ""} /><br />
+        Author: <input type= "text" name="author" onChange={props.handleChange} value={props.book.author || ""} /><br />
+        Year published: <input type= "text" name="year" onChange={props.handleChange} value={props.book.year || ""} /><br />
+        Genres: <input type= "array" name="genres" onChange={props.handleChange} value={props.book.genres || ""} />
       </form>
-      <button onClick={props.onSave}>Save</button> | <button onClick={props.onClear}>Clear</button>
+      <button onClick={props.onSave}>Save</button> |  
+      <button onClick={props.onClear}>Clear</button> | 
+      <button onClick={props.deleteBook}>Delete</button>
       </div>
 }
    
@@ -67,37 +55,83 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {current_book: {}};
+
+    this.showDetail = this.showDetail.bind(this);
+    this.onClear = this.onClear.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
 
   showDetail = (e) => {
-    console.log(e.target.innerText);
-    const book = books.find((book) => book.title == e.target.innerText)
-    console.log(book)
-    this.setState({"current_book": book})
+    //console.log(e.target.innerText);
+    const found = this.state.books.find((book) => {
+      return book.title === e.target.innerText;
+    });
+    //console.log(book)
+    this.setState({current_book: found})
   }
 
-  onChange = (e) => {
-    console.log(e.target)
-    const new_book = this.state.current_book;
+  handleChange = (e) => {
+    //console.log(this.state.current_book)
+    let new_book = this.state.current_book;
     new_book[e.target.name] = e.target.value;
-    console.log(new_book)
-    this.setState({"current_book": new_book})
+    this.setState({current_book: new_book});
+
+    //console.log(e.target)
+    console.log(e.target.name)
+    console.log(e.target.value)
   }
   
-  onClear = () => {
-    this.setState({"current_book": {}})
-  }
   
   onSave = () => {
-    let rnr = this.state.current_book;
+    if (this.state.current_book == {}) return
+
+    let new_book = this.state.current_book
+
     fetch("/api/books/add/", {
-    method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(rnr)
-})
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(new_book)
+    })
     .then(res => res.json())
-    .then((json) => { console.log(json) });
+    .then((json) => {
+      console.log(json) 
+      if (!json.updated === 0) {
+        new_book.title = json.title
+       newList = this.state.books;
+       newList.push(new_book);
+       this.setState({books: newList});
+      }
+    });
+  }
+
+  onClear = () => {
+    this.setState({current_book: {}})
+  }
+
+  deleteBook = () => {
+    console.log(this.state.current_book)
+
+      if (this.state.current_book == {}) return
+      let deleteTitle = this.state.current_book.title 
+
+      let url = "/api/books/delete/"+deleteTitle;
+
+
+      fetch(url)
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          console.log(json)
+          if (json.deleted.deletedCount > 0) {
+            let newList = this.state.books.filter(book => {
+              return book.title != deleteTitle;
+            })
+            this.setState({books: newList, current_book: {}})
+          }
+        })
+        //.catch(err => console.log(err))
   }
 
 
@@ -107,8 +141,13 @@ class App extends React.Component {
         <h1>Hello there!</h1>
         <h2>Welcome to the home page.</h2>
         <hr></hr>
-        <List books={books} clickHandler={this.getbookDetails} />
-        <BookDetail book={this.state.current_book} onSave={this.onSave} onChange={this.onChange} onClear={this.onClear}/>
+        <List books={books} clickHandler={this.BookDetails} />
+        <BookDetail 
+          book={this.state.current_book} 
+          onSave={this.onSave} 
+          onChange={this.handleChange} 
+          onClear={this.onClear}
+          deleteBook={this.deleteBook}/>
       </div> );
   }
 }
