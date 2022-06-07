@@ -53,7 +53,7 @@ app.get('/api/books/detail/:title', (req,res,next) => { //get one book using api
 
 
 app.get('/delete', (req,res) => {
-    Book.remove({title:req.query.title}, (err, result) => {
+    Book.deleteOne({title:req.query.title}, (err, result) => {
         if (err) return next(err);
         let deleteItem = result.result.n !== 0; // n will be 0 if no books are deleted
         Book.count((err, total) => {
@@ -63,7 +63,7 @@ app.get('/delete', (req,res) => {
     });
 
 app.get('/api/books/delete/:title', (req,res) => { //delete one item using api
-    Book.remove({title:req.params.title}, (err, result) => {
+    Book.deleteOne({title:req.params.title}, (err, result) => {
         if (err) return next(err);
             console.log(result)
             res.json({"message": "Book Deleted Successfully!", result})    
