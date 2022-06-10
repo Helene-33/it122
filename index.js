@@ -22,7 +22,7 @@ app.use ('/api', cors());
 app.get('/', (req,res) => {
     Book.find({}).lean()
         .then((books) => {
-            res.render('home.ejs', {books});
+            res.render('home_react.ejs', {books: JSON.stringify(books)});
         })
         .catch(err => next(err));
     });

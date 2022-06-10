@@ -15,23 +15,27 @@ const getAll = () => {
 }
 
 const getItem = (title) => {
-    return books.find((book) => { // . filter pulls all the ones matching the year / .find only takes the first one out
+    return books.find((book) => { // . filter pulls all the ones matching the title / .find only takes the first one out
         return book.title === title;
     });
 } 
 
-const addItem = (addBook) => {
-    books.push(addBook);
-    return books.push((title) => {
-        return addBook.title === title;
-    });    
+const addItem = (newBook) => {
+    let found = books.filter(newBook.title);
+        if (found) {
+            console.log ('This book is already in the list.')
+            //return false
+        } else if (!found) {
+            newBook.title === title;
+            books.push(newBook);
+            //return true
+    }
 }
 
 const deleteItem = (title) => {
-    books.delete((item) => {
-        return item.title !== title;
-    });
-};    
+    books.splice(books.findIndex(e => e.title === title));
+        return books.title !== title;
+    };  
 
 
 export {getAll, getItem, addItem, deleteItem};
