@@ -1,6 +1,4 @@
 import { expect } from "chai";
-import req from "express/lib/request.js";
-import * as book from "../data.js";
 import {getItem, addItem, deleteItem} from '../data.js';
 
 describe("Book", () => {
@@ -19,23 +17,23 @@ describe("Book", () => {
     it('a new book was succesfully added!', () => { //test adding an item succeded
         let result = addItem(
             {title: 'And Then There Were None', author: 'Agatha Christie', year: 1939, genres: ["Novel", "Mystery"]});
-        expect(result.addItem).to.be.true;
+        expect(result).to.be.true;
     })
 
     it('we already have this book', () => { //test adding an item failed
         let result = addItem(
             {title : "Little Women", author : "Louisa May Alcott", year : 1868, genres: ["Novel", "Fiction", "Children's literature"]});
-        expect(result.addItem).to.be.false;
+        expect(result).to.be.false;
     })
 
     it('this book was succesfully deleted', () => { //test deleting an item succeded
         let result = deleteItem("Little Women");
-        expect(result.deleteItem).to.be.true;
+        expect(result).to.be.true;
     })
 
-    it('we could not delete this book', () => { //test deleting an item succeded
+    it('we could not delete this book', () => { //test deleting an item failed
         let result = deleteItem("To Kill a Mockingbird");
-        expect(result.deleteItem).to.be.false;
+        expect(result).to.be.false;
     })
 
 })
