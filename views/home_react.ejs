@@ -5,7 +5,7 @@
     <title>JavaScript2 - React Version</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     
     <!-- Don't use this in production: -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -14,17 +14,8 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-
-  const books = [
-      { title : "Harry Potter and the Sorcerer's Stone", author : "J.K. Rowling", year : 1997, genres : ["Novel", "Children's literature", "Fantasy"] },
-      { title : "1984", author : "George Orwell", year : 1949, genres : ["Science fiction", "Political fiction", "Social science fiction", "Dystopian fiction"] },
-      { title : "The Hobbit", author : "J.R.R Tolkien", year : 1937, genres : ["Novel", "Children's literature", "Fantasy"] },
-      { title : "Little Women", author : "Louisa May Alcott", year : 1868, genres : ["Novel", "Fiction", "Children's literature"] },
-      { title : "Fahrenheit 451", author : "Ray Bradbury", year : 1953, genres : ["Novel", "Science fiction", "Dystopian fiction", "Political fiction"] },
-  ];
  
-/*const books = <%- books %>; 
-    console.log(books)*/
+ let books = <%- books %>;
 
   const List = (props) => {
     const booksList = props.books.map((book) => {
@@ -39,10 +30,10 @@
       <hr></hr>
       <h4>Books Details:</h4>
       <form>
-        Title: <input type= "text" name="title" onChange={props.handleChange} value={props.book.title || ""} /><br />
-        Author: <input type= "text" name="author" onChange={props.handleChange} value={props.book.author || ""} /><br />
-        Year published: <input type= "text" name="year" onChange={props.handleChange} value={props.book.year || ""} /><br />
-        Genres: <input type= "array" name="genres" onChange={props.handleChange} value={props.book.genres || ""} />
+        Title: <input type="text" name="title" onChange={props.onChange} value={props.book.title || ""} /><br />
+        Author: <input type="text" name="author" onChange={props.onChange} value={props.book.author || ""} /><br />
+        Year published: <input type="text" name="year" onChange={props.onChange} value={props.book.year || ""} /><br />
+        Genres: <input type="array" name="genres" onChange={props.onChange} value={props.book.genres || ""} />
       </form>
       <button onClick={props.onSave}>Save</button> |  
       <button onClick={props.onClear}>Clear</button> | 
@@ -54,8 +45,9 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {current_book: {}};
-
+    this.state = {current_book: {},
+      books: <%- books %>
+    };
     this.showDetail = this.showDetail.bind(this);
     this.onClear = this.onClear.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -63,21 +55,20 @@ class App extends React.Component {
 
 
   showDetail = (e) => {
-    //console.log(e.target.innerText);
-    const found = this.state.books.find((book) => {
-      return book.title === e.target.innerText;
-    });
-    //console.log(book)
-    this.setState({current_book: found})
+      const found = this.state.books.find((book)=> {
+        return book.title === e.target.innerText;
+      });
+      console.log(found);
+      this.setState({current_book: found});
   }
 
+
   handleChange = (e) => {
-    //console.log(this.state.current_book)
     let new_book = this.state.current_book;
     new_book[e.target.name] = e.target.value;
     this.setState({current_book: new_book});
 
-    //console.log(e.target)
+    
     console.log(e.target.name)
     console.log(e.target.value)
   }
@@ -141,13 +132,14 @@ class App extends React.Component {
         <h1>Hello there!</h1>
         <h2>Welcome to the home page.</h2>
         <hr></hr>
-        <List books={books} clickHandler={this.BookDetails} />
+        <List books={this.state.books} handleClick={this.showDetail} />
         <BookDetail 
           book={this.state.current_book} 
           onSave={this.onSave} 
           onChange={this.handleChange} 
           onClear={this.onClear}
           deleteBook={this.deleteBook}/>
+
       </div> );
   }
 }
